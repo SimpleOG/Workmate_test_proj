@@ -21,12 +21,10 @@ func NewMiddleware(auth authService.AuthServiceInterface) MiddlewaresInterface {
 
 func (m Middlewares) CheckUsersToken(ctx *gin.Context) {
 	token := ctx.GetHeader("Authorization")
-
-	token = strings.Split(token, " ")[1]
-
 	if token == "" {
 		ctx.AbortWithStatus(http.StatusUnauthorized)
 	}
+	token = strings.Split(token, " ")[1]
 	userId, err := m.Auth.ValidateToken(token)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
